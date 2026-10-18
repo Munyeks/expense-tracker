@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Edit Kategori - Expense Tracker{% endblock %}
+{% block content %}
+    <div class="max-w-md mx-auto bg-white p-6 rounded-lg border border-zinc-200 shadow-sm">
+        <div class="mb-6">
+            <h1 class="text-xl font-semibold text-zinc-900">Edit Kategori</h1>
+            <p class="text-sm text-zinc-500 mt-1">Perbarui nama atau tipe kategori Anda.</p>
+        </div>
+        <form method="post" action="">
+            {{ form.hidden_tag() }}
+            <div class="mb-4">
+                {{ form.name.label(class="block text-xs font-semibold text-zinc-700 uppercase tracking-wider mb-1.5") }}
+                {{ form.name(class="w-full px-3 py-2 bg-zinc-50 border border-zinc-300 rounded-md focus:outline-none focus:ring-1 focus:ring-zinc-800 focus:bg-white sm:text-sm") }}
+            </div>
+            <div class="mb-6">
+                {{ form.type.label(class="block text-xs font-semibold text-zinc-700 uppercase tracking-wider mb-1.5") }}
+                {{ form.type(class="w-full px-3 py-2 bg-zinc-50 border border-zinc-300 rounded-md focus:outline-none focus:ring-1 focus:ring-zinc-800 focus:bg-white sm:text-sm") }}
+            </div>
+            <div class="flex space-x-3">
+                <a href="{{ url_for("main.categories") }}"
+                   class="w-1/2 flex justify-center py-2 px-4 border border-zinc-300 rounded-md text-sm font-medium text-zinc-700 bg-white hover:bg-zinc-50 transition-colors">Batal</a>
+                {{ form.submit(class="w-1/2 flex justify-center py-2 px-4 border border-zinc-800 rounded-md text-sm font-medium text-white bg-zinc-900 hover:bg-zinc-800 transition-colors cursor-pointer", value="Simpan Perubahan") }}
+            </div>
+        </form>
+    </div>
+{% endblock %}

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="id">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}Expense Tracker{% endblock %}</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
+                    }
+                }
+            }
+        }
+        </script>
+    </head>
+    <body class="bg-zinc-50 text-zinc-900 font-sans antialiased min-h-screen flex flex-col">
+        <!-- Navbar: Hanya tampil jika user sudah login -->
+        {% if current_user.is_authenticated %}
+        <nav class="bg-white border-b border-zinc-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between h-16">
+                    <!-- Kiri: Logo & Menu Desktop -->
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 flex items-center">
+                            <span class="font-bold text-zinc-900 text-lg tracking-tight">PortofolioKas</span>
+                        </div>
+                        <!-- Menu ini hanya muncul di layar menengah (md) ke atas -->
+                        <div class="hidden md:ml-8 md:flex md:space-x-6">
+                            <a href="{{ url_for('main.index') }}" class="text-sm font-medium text-zinc-600 hover:text-zinc-900 transition-colors">Dashboard</a>
+                            <a href="{{ url_for('main.categories') }}" class="text-sm font-medium text-zinc-600 hover:text-zinc-900 transition-colors">Kategori</a>
+                            <a href="{{ url_for('main.transactions') }}" class="text-sm font-medium text-zinc-600 hover:text-zinc-900 transition-colors">Transaksi</a>
+                        </div>
+                    </div>
+
+                    <!-- Kanan: Info User & Logout (Desktop) -->
+                    <div class="hidden md:flex items-center space-x-4">
+                        <span class="text-sm text-zinc-500 font-mono">{{ current_user.username }}</span>
+                        <a href="{{ url_for('auth.logout') }}" class="text-sm font-medium px-3 py-1.5 border border-zinc-300 rounded-md text-zinc-700 hover:bg-zinc-100 transition-colors">Keluar</a>
+                    </div>
+
+                    <!-- Tombol Hamburger (Hanya muncul di layar HP) -->
+                    <div class="flex items-center md:hidden">
+                        <button type="button" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="inline-flex items-center justify-center p-2 rounded-md text-zinc-400 hover:text-zinc-600 hover:bg-zinc-100 focus:outline-none transition-colors">
+                            <span class="sr-only">Buka menu</span>
+                            <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Menu Mobile Dropdown (Tersembunyi secara default) -->
+            <div class="hidden md:hidden border-t border-zinc-200 bg-zinc-50" id="mobile-menu">
+                <div class="px-4 pt-2 pb-3 space-y-1">
+                    <a href="{{ url_for('main.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-zinc-700 hover:text-zinc-900 hover:bg-zinc-200">Dashboard</a>
+                    <a href="{{ url_for('main.categories') }}" class="block px-3 py-2 rounded-md text-base font-medium text-zinc-700 hover:text-zinc-900 hover:bg-zinc-200">Kategori</a>
+                    <a href="{{ url_for('main.transactions') }}" class="block px-3 py-2 rounded-md text-base font-medium text-zinc-700 hover:text-zinc-900 hover:bg-zinc-200">Transaksi</a>
+                </div>
+                <div class="pt-4 pb-4 border-t border-zinc-200">
+                    <div class="px-7 mb-2">
+                        <p class="text-sm font-medium text-zinc-500 font-mono">User Aktif:</p>
+                        <p class="text-base font-medium text-zinc-900">{{ current_user.username }}</p>
+                    </div>
+                    <div class="px-4 mt-3">
+                        <a href="{{ url_for('auth.logout') }}" class="flex justify-center w-full px-3 py-2 border border-zinc-300 rounded-md text-base font-medium text-zinc-700 bg-white hover:bg-zinc-100">Keluar</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        {% endif %}
+        <!-- Area Konten Utama -->
+        <!-- Menghapus tag div tambahan dan menyatukan class container di tag main -->
+        <main class="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="mb-6 p-4 rounded-md border text-sm font-medium {% if category == 'success' %}bg-green-50 border-green-200 text-green-800{% elif category == 'error' %}bg-red-50 border-red-200 text-red-800{% else %}bg-zinc-100 border-zinc-200 text-zinc-800{% endif %}"
+                             role="alert">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            <!-- Tempat halaman spesifik dirender -->
+            {% block content %}{% endblock %}
+        </main>
+    </body>
+</html>

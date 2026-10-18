@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - Expense Tracker{% endblock %}
+{% block content %}
+    <!-- Sisipkan pustaka Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <div class="mb-8">
+        <h1 class="text-2xl font-semibold text-zinc-900">Ringkasan Bulan Ini</h1>
+        <p class="text-sm text-zinc-500 mt-1">Pantau arus kas dan histori transaksi terbaru Anda.</p>
+    </div>
+    <!-- Kartu Ringkasan (Tetap sama seperti sebelumnya) -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <!-- ... (Isi ketiga kartu income, expense, balance dari tahap sebelumnya) ... -->
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Kolom Kiri: Grafik Pengeluaran -->
+        <div class="lg:col-span-1">
+            <div class="bg-white p-6 rounded-lg border border-zinc-200 shadow-sm h-full">
+                <h2 class="text-sm font-semibold text-zinc-800 mb-4 border-b border-zinc-100 pb-2">Proporsi Pengeluaran</h2>
+                {% if chart_values|length > 0 %}
+                    <div class="relative w-full aspect-square">
+                        <canvas id="expenseChart"></canvas>
+                    </div>
+                {% else %}
+                    <div class="flex items-center justify-center h-48 text-sm text-zinc-400">Belum ada pengeluaran bulan ini.</div>
+                {% endif %}
+            </div>
+        </div>
+        <!-- Kolom Kanan: Tabel 5 Transaksi Terakhir (Tetap sama seperti sebelumnya) -->
+        <div class="lg:col-span-2">
+            <div class="bg-white rounded-lg border border-zinc-200 shadow-sm overflow-hidden h-full">
+                <!-- ... (Isi tabel recent transactions dari tahap sebelumnya) ... -->
+            </div>
+        </div>
+    </div>
+    <!-- Script Inisialisasi Chart.js dengan Palet Netral -->
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const ctx = document.getElementById('expenseChart');
+        if (ctx) {
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: {{ chart_labels | safe }},
+                    datasets: [{
+                        data: {{ chart_values | safe }},
+                        // Menggunakan palet warna Zinc/Slate yang netral dan berkelas
+                        backgroundColor: [
+                            '#3f3f46', // zinc-700
+                            '#71717a', // zinc-500
+                            '#a1a1aa', // zinc-400
+                            '#d4d4d8', // zinc-300
+                            '#52525b', // zinc-600
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#ffffff',
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '75%', // Membuat cincin grafik lebih tipis (elegan)
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true,
+                                pointStyle: 'circle',
+                                font: {
+                                    family: "'Inter', sans-serif",
+                                    size: 11
+                                },
+                                color: '#52525b'
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: '#18181b',
+                            titleFont: { family: "'Inter', sans-serif", size: 12 },
+                            bodyFont: { family: "'ui-monospace', monospace", size: 12 },
+                            padding: 12,
+                            cornerRadius: 6,
+                            callbacks: {
+                                label: function(context) {
+                                    let value = context.raw;
+                                    return ' Rp ' + value.toLocaleString('id-ID');
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    });
+    </script>
+{% endblock %}

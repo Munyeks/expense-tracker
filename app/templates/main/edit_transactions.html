@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Edit Transaksi - Expense Tracker{% endblock %}
+{% block content %}
+    <div class="max-w-md mx-auto bg-white p-6 rounded-lg border border-zinc-200 shadow-sm">
+        <div class="mb-6">
+            <h1 class="text-xl font-semibold text-zinc-900">Edit Transaksi</h1>
+            <p class="text-sm text-zinc-500 mt-1">Perbarui nominal, kategori, atau tanggal.</p>
+        </div>
+        <form method="post" action="">
+            {{ form.hidden_tag() }}
+            <div class="mb-4">
+                {{ form.amount.label(class="block text-xs font-semibold text-zinc-700 uppercase tracking-wider mb-1.5") }}
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <span class="text-zinc-500 sm:text-sm font-mono">Rp</span>
+                    </div>
+                    {{ form.amount(class="w-full pl-10 px-3 py-2 bg-zinc-50 border border-zinc-300 rounded-md focus:outline-none focus:ring-1 focus:ring-zinc-800 focus:bg-white sm:text-sm font-mono") }}
+                </div>
+            </div>
+            <div class="mb-4">
+                {{ form.category_id.label(class="block text-xs font-semibold text-zinc-700 uppercase tracking-wider mb-1.5") }}
+                {{ form.category_id(class="w-full px-3 py-2 bg-zinc-50 border border-zinc-300 rounded-md focus:outline-none focus:ring-1 focus:ring-zinc-800 focus:bg-white sm:text-sm") }}
+            </div>
+            <div class="mb-4">
+                {{ form.date.label(class="block text-xs font-semibold text-zinc-700 uppercase tracking-wider mb-1.5") }}
+                {{ form.date(class="w-full px-3 py-2 bg-zinc-50 border border-zinc-300 rounded-md focus:outline-none focus:ring-1 focus:ring-zinc-800 focus:bg-white sm:text-sm") }}
+            </div>
+            <div class="mb-6">
+                {{ form.note.label(class="block text-xs font-semibold text-zinc-700 uppercase tracking-wider mb-1.5") }}
+                {{ form.note(class="w-full px-3 py-2 bg-zinc-50 border border-zinc-300 rounded-md focus:outline-none focus:ring-1 focus:ring-zinc-800 focus:bg-white sm:text-sm") }}
+            </div>
+            <div class="flex space-x-3">
+                <a href="{{ url_for("main.transactions") }}"
+                   class="w-1/2 flex justify-center py-2 px-4 border border-zinc-300 rounded-md text-sm font-medium text-zinc-700 bg-white hover:bg-zinc-50 transition-colors">Batal</a>
+                {{ form.submit(class="w-1/2 flex justify-center py-2 px-4 border border-zinc-800 rounded-md text-sm font-medium text-white bg-zinc-900 hover:bg-zinc-800 transition-colors cursor-pointer", value="Simpan Perubahan") }}
+            </div>
+        </form>
+    </div>
+{% endblock %}
